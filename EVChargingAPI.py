@@ -6,7 +6,7 @@ import os
 
 app = FastAPI()
 db_password = os.environ['DATABASE_URL']
-conn = psycopg.connect(db_password)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,6 +19,7 @@ app.add_middleware(
 
 @app.get('/charging_stations')
 def get_charging_stations(xmin,ymin,xmax,ymax):
+    conn = psycopg.connect(db_password)
     with conn.cursor() as cursor:
         cursor.execute('SELECT ST_X(CAST(location AS geometry)), ST_Y(CAST(location AS geometry)), api_id FROM ireland_chargers WHERE location && ST_MakeEnvelope(%s,%s,%s,%s,4326);',params=(xmin,ymin,xmax,ymax))
         sql_data = cursor.fetchall()
