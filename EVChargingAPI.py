@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+@app.get('/')
+def root():
+    return {'Root':'root'}
+
 
 @app.get('/charging_stations')
 def get_charging_stations(xmin,ymin,xmax,ymax):
